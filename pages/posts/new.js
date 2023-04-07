@@ -6,6 +6,7 @@ export default function NewPost(props) {
   const [postContent, setPostContent] = useState('');
   const [topic, setTopic] = useState('');
   const [keywords, setKeywords] = useState('');
+  const [aiModel, setAiModel] = useState('');
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -43,6 +44,16 @@ export default function NewPost(props) {
             value={keywords}
             onChange={(e) => setKeywords(e.target.value)}
           />
+        </div>
+        <div>
+          <select
+            value={aiModel}
+            onChange={(e) => setAiModel(e.target.value)}
+            className="border-slate-500 w-med my-2 px-4 py-2 items-center content-center justify-center align-center rounded-sm"
+          >
+            <option value="gpt-3.5-turbo">ChatGPT-3.5-Turbo</option>
+            <option value="text-davinci-003">Text-DaVinci-003</option>
+          </select>
         </div>
         <button type="sumbit" className="btn-alt">
           Generate
