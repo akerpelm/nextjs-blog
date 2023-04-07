@@ -4,21 +4,50 @@ import { AppLayout } from '../../components/AppLayout';
 
 export default function NewPost(props) {
   const [postContent, setPostContent] = useState('');
+  const [topic, setTopic] = useState('');
+  const [keywords, setKeywords] = useState('');
 
-  const handleClick = async () => {
+  const handleSubmit = async (e) => {
+    e.preventDefault();
     const response = await fetch(`/api/generatePost`, {
-      method: 'POST'
+      method: 'POST',
+      headers: {
+        'content-type': 'application/json'
+      },
+      body: JSON.stringify({ topic, keywords })
     });
     const json = await response.json();
     setPostContent(json.data.postContent);
     console.log(json.data.postContent, 'json');
   };
+
   return (
     <div>
-      <h1>This is the new post page</h1>
-      <button className="btn-alt" onClick={handleClick}>
-        Generate
-      </button>
+      <form onSubmit={handleSubmit}>
+        <div>
+          <label>
+            <strong>Generate a blog post on the topic of:</strong>
+          </label>
+          <textarea
+            className="resize-none border-slate-500 w-full block my-2 px-4 py-2 rounded-sm"
+            value={topic}
+            onChange={(e) => setTopic(e.target.value)}
+          />
+        </div>
+        <div>
+          <label>
+            <strong>Targetting the following keywords:</strong>
+          </label>
+          <textarea
+            className="resize-none border-slate-500 w-full block my-2 px-4 py-2 rounded-sm"
+            value={keywords}
+            onChange={(e) => setKeywords(e.target.value)}
+          />
+        </div>
+        <button type="sumbit" className="btn-alt">
+          Generate
+        </button>
+      </form>
       <div
         className="max-w-screen-sm p-10"
         dangerouslySetInnerHTML={{ __html: postContent }}
