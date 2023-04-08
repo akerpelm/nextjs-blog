@@ -6,7 +6,7 @@ export default function NewPost(props) {
   const [postContent, setPostContent] = useState('');
   const [topic, setTopic] = useState('');
   const [keywords, setKeywords] = useState('');
-  const [aiModel, setAiModel] = useState('');
+  const [aiModel, setAiModel] = useState('gpt-3.5-turbo'); // needs implementation in generatePost
 
   const handleSubmit = async (e) => {
     e.preventDefault();

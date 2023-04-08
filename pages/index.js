@@ -13,7 +13,7 @@ export default function Home() {
           An AI-powered solution to generate SEO-optimized blog posts in
           minutes. Get high-quality content, without sacrificing your time.
         </p>
-        <Link href="/posts/new" class="btn">
+        <Link href="/posts/new" className="btn">
           Begin
         </Link>
       </div>
