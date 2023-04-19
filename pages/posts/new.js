@@ -1,9 +1,11 @@
 import { withPageAuthRequired } from '@auth0/nextjs-auth0';
+import { useRouter } from 'next/router';
 import { useState } from 'react';
 import { AppLayout } from '../../components/AppLayout';
+import { getAppProps } from '../../utils/getAppProps';
 
 export default function NewPost(props) {
-  const [postContent, setPostContent] = useState('');
+  const router = useRouter();
   const [topic, setTopic] = useState('');
   const [keywords, setKeywords] = useState('');
   const [aiModel, setAiModel] = useState('gpt-3.5-turbo'); // needs implementation in generatePost
@@ -18,12 +20,13 @@ export default function NewPost(props) {
       body: JSON.stringify({ topic, keywords })
     });
     const json = await response.json();
-    setPostContent(json.data.postContent);
-    console.log(json.data.postContent, 'json');
+    if (json?.postId) {
+      router.push(`/posts/${json.postId}`);
+    }
   };
 
   return (
-    <div>
+    <div className="bg-pink-100">
       <form onSubmit={handleSubmit}>
         <div>
           <label>
@@ -59,10 +62,10 @@ export default function NewPost(props) {
           Generate
         </button>
       </form>
-      <div
+      {/* <div
         className="max-w-screen-sm p-10"
         dangerouslySetInnerHTML={{ __html: postContent }}
-      />
+      /> */}
     </div>
   );
 }
@@ -71,8 +74,11 @@ NewPost.getLayout = function getLayout(page, pageProps) {
   return <AppLayout {...pageProps}>{page}</AppLayout>;
 };
 
-export const getServerSideProps = withPageAuthRequired(() => {
-  return {
-    props: {}
-  };
+export const getServerSideProps = withPageAuthRequired({
+  async getServerSideProps(ctx) {
+    const props = await getAppProps(ctx);
+    return {
+      props
+    };
+  }
 });

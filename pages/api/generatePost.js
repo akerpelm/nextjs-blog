@@ -118,6 +118,8 @@ export default withApiAuthRequired(async function handler(req, res) {
     ]
   });
 
+  console.log(postContent, 'content');
+
   const title = titleResponse.data.choices[0]?.message?.content || '';
 
   const metaDescription =
@@ -144,13 +146,8 @@ export default withApiAuthRequired(async function handler(req, res) {
     createdDate: new Date()
   });
 
-  console.log(title, postContent, metaDescription);
-
+  console.log(post, 'post');
   res.status(200).json({
-    data: {
-      title,
-      postContent,
-      metaDescription
-    }
+    postId: post.insertedId
   });
 });
