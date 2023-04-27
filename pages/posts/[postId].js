@@ -6,7 +6,6 @@ import { AppLayout } from '../../components/AppLayout';
 import clientPromise from '../../lib/mongodb';
 import { getAppProps } from '../../utils/getAppProps';
 export default function Post(props) {
-  console.log(props.postContent, 'props');
   return (
     <div className="overflow-auto h-full bg-pink-100">
       <div className="max-w-screen-sm mx-auto">

@@ -5,7 +5,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { Logo } from '../Logo';
 
-export const AppLayout = ({ children, availableTokens, posts }) => {
+export const AppLayout = ({ children, availableTokens, posts, postId }) => {
   const { user } = useUser();
 
   return (
@@ -17,17 +17,19 @@ export const AppLayout = ({ children, availableTokens, posts }) => {
             New Post
           </Link>
           <Link href="/token-refill" className="block mt-2 text-center">
-            <FontAwesomeIcon icon={faCoins} className="text-yellow-500" />{' '}
+            <FontAwesomeIcon icon={faCoins} className="text-yellow-500" />
             <span className="pl-1">{availableTokens} Tokens Available</span>
           </Link>
         </div>
-        <div className="flex-1 overflow-auto">
+        <div className="px-4 flex-1 overflow-auto">
           {posts.map((post) => {
             return (
               <Link
                 key={post._id}
                 href={`/posts/${post._id}`}
-                className="block text-ellipsis overflow-hidden whitespace-nowrap my-1 px-2 bg-white/10 cursor-pointer rounded-sm"
+                className={` py-1 border border-white/0 block text-ellipsis overflow-hidden whitespace-nowrap my-2 px-4 bg-white/10 cursor-pointer rounded-sm w-auto hover:font-bold hover:text-pink-500  border-white ${
+                  postId === post._id ? 'bg-white/20 px-5 border-white' : ''
+                }`}
               >
                 {post.topic}
               </Link>
