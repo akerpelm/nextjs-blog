@@ -8,6 +8,14 @@ import { Logo } from '../Logo';
 export const AppLayout = ({ children, availableTokens, posts, postId }) => {
   const { user } = useUser();
 
+  const titleCase = (str) => {
+    str = str.toLowerCase().split(' ');
+    for (var i = 0; i < str.length; i++) {
+      str[i] = str[i].charAt(0).toUpperCase() + str[i].slice(1);
+    }
+    return str.join(' ');
+  };
+
   return (
     <div className="grid grid-cols-[300px_1fr] h-screen max-h-screen">
       <div className=" flex flex-col text-white overflow-hidden bg-slate-800">
@@ -31,7 +39,7 @@ export const AppLayout = ({ children, availableTokens, posts, postId }) => {
                   postId === post._id ? 'bg-white/20 px-5 border-white' : ''
                 }`}
               >
-                {post.topic}
+                {titleCase(post.topic)}
               </Link>
             );
           })}
