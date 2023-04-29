@@ -48,27 +48,45 @@ export default function NewPost(props) {
             className="m-auto w-full max-w-screen-sm bg-pink-400 p-4 rounded-md shadow-xl border border-slate-200 shadow-slate-200"
           >
             <div>
-              <label>
+              <label className="flex justify-between">
                 <strong>Generate a blog post on the topic of:</strong>
+                <strong className="pl-4 text-green-100">
+                  {topic.trim() && '✔'}
+                </strong>
               </label>
               <textarea
                 className="resize-none border-slate-500 w-full block my-2 px-4 py-2 rounded-sm"
                 value={topic}
                 onChange={(e) => setTopic(e.target.value)}
+                maxLength={80}
               />
+              <figcaption className="pb-2 text-sm">
+                {80 - topic.length} characters remaining
+              </figcaption>
             </div>
             <div>
               <label>
-                <strong>Targeting the following keywords:</strong>
+                <div className="flex justify-between">
+                  <strong>Targeting the following keywords:</strong>
+                  <strong className="pl-4 text-green-100">
+                    {keywords.trim() && '✔'}
+                  </strong>
+                </div>
+                <small className="block mb-2">
+                  Separate keywords with a coma (green, yellow, red, etc.)
+                </small>
               </label>
+
               <textarea
                 className="resize-none border-slate-500 w-full block my-2 px-4 py-2 rounded-sm"
                 value={keywords}
                 onChange={(e) => setKeywords(e.target.value)}
+                maxLength={80}
               />
-              <small className="block mb-2">
-                Separate keywords with a coma
-              </small>
+
+              <figcaption className="pb-2 text-sm">
+                {80 - keywords.length} characters remaining
+              </figcaption>
             </div>
             <div>
               <select
@@ -80,7 +98,11 @@ export default function NewPost(props) {
                 <option value="text-davinci-003">Text-DaVinci-003</option>
               </select>
             </div>
-            <button type="sumbit" className="btn-alt">
+            <button
+              type="sumbit"
+              className="btn-alt"
+              disabled={!topic.trim() || !keywords.trim()}
+            >
               Generate
             </button>
           </form>
@@ -97,6 +119,15 @@ NewPost.getLayout = function getLayout(page, pageProps) {
 export const getServerSideProps = withPageAuthRequired({
   async getServerSideProps(ctx) {
     const props = await getAppProps(ctx);
+
+    if (!props.availableTokens) {
+      return {
+        redirect: {
+          destination: '/token-refill',
+          permanent: false
+        }
+      };
+    }
     return {
       props
     };

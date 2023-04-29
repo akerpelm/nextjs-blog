@@ -3,10 +3,24 @@ import { faCoins } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import Image from 'next/image';
 import Link from 'next/link';
+import { useContext, useEffect } from 'react';
+import PostsContext from '../../context/postsContext';
 import { Logo } from '../Logo';
 
-export const AppLayout = ({ children, availableTokens, posts, postId }) => {
+export const AppLayout = ({
+  children,
+  availableTokens,
+  posts: postsFromSSR,
+  postId
+}) => {
   const { user } = useUser();
+
+  const { posts, setPostsFromSSR, getPosts, lastPost } =
+    useContext(PostsContext);
+
+  useEffect(() => {
+    setPostsFromSSR(postsFromSSR);
+  }, [postsFromSSR, setPostsFromSSR]);
 
   const titleCase = (str) => {
     str = str.toLowerCase().split(' ');
@@ -19,14 +33,14 @@ export const AppLayout = ({ children, availableTokens, posts, postId }) => {
   return (
     <div className="grid grid-cols-[300px_1fr] h-screen max-h-screen">
       <div className=" flex flex-col text-white overflow-hidden bg-slate-800">
-        <div>
+        <div className="mb-2">
           <Logo />
           <Link href="/posts/new" className="btn">
             New Post
           </Link>
           <Link href="/token-refill" className="block mt-2 text-center">
             <FontAwesomeIcon icon={faCoins} className="text-yellow-500" />
-            <span className="pl-1">{availableTokens} Tokens Available</span>
+            <span className="pl-1 ">{availableTokens} Tokens Available</span>
           </Link>
         </div>
         <div className="px-4 flex-1 overflow-auto">
@@ -43,6 +57,16 @@ export const AppLayout = ({ children, availableTokens, posts, postId }) => {
               </Link>
             );
           })}
+          {!lastPost && (
+            <div
+              onClick={() =>
+                getPosts({ lastPostDate: posts[posts.length - 1].createdDate })
+              }
+              className="hover:underline text-sm text-slate-400 text-center cursor-pointer mt-4"
+            >
+              Load more posts
+            </div>
+          )}
         </div>
         <div className="flex items-center gap-2 border-t border-t-white/50 h-20 px-2">
           {user ? (
