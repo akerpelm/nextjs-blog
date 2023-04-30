@@ -11,7 +11,8 @@ export const AppLayout = ({
   children,
   availableTokens,
   posts: postsFromSSR,
-  postId
+  postId,
+  postCreatedDate
 }) => {
   const { user } = useUser();
 
@@ -20,7 +21,13 @@ export const AppLayout = ({
 
   useEffect(() => {
     setPostsFromSSR(postsFromSSR);
-  }, [postsFromSSR, setPostsFromSSR]);
+    if (postId) {
+      const exists = postsFromSSR.find((post) => post._id === postId);
+      if (!exists) {
+        getPosts({ getNewerPosts: true, lastPostDate: postCreatedDate });
+      }
+    }
+  }, [postsFromSSR, setPostsFromSSR, postId, postCreatedDate, getPosts]);
 
   const titleCase = (str) => {
     str = str.toLowerCase().split(' ');
